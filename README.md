@@ -14,3 +14,14 @@ Message protocol format, use hex values:
  aa - led attribute, currently bit 0 (set 0x01) means blink
  
  
+Use send program from 
+
+https://github.com/digistump/DigisparkExamplePrograms.git 
+
+Example usage: :
+
+;sets led 01  white color
+./send 01ffffff00 --no-new-line
+
+;sets led 2 blinking red
+./send 0200ff0001 --no-new-line
