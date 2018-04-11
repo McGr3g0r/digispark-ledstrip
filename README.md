@@ -8,12 +8,15 @@ Message protocol format, use hex values:
  
  ll -led number from 0 to NUMPIXELS-1
 
- If ll is ff - then set color for all leds.
- If ll is fe - then rr is brightness from 0 to ff passed to the Nexopixel library.
+ If ll is 0xff - then set color for all leds.
+
+ If ll is 0xfe - then rr is brightness from 0 to ff passed to the Nexopixel library.
+
  rr,gg,bb - hex values of the color to be set
+
  aa - led attribute, currently bit 0 (set 0x01) means blink
- 
- 
+
+
 Use send program from 
 
 https://github.com/digistump/DigisparkExamplePrograms.git 
@@ -28,6 +31,6 @@ Example usage: :
 
 ./send 0200ff0001 --no-new-line
 
-DigiSpark with ATTINY85 has very low resources. In case the program does not work well with USB
-change  RING_BUFFER_SIZE to 64 in DigiUSB.h
+DigiSpark with ATTINY85 has very low resources.
 
+In case the program does not work well with USB change  RING_BUFFER_SIZE to 64 in DigiUSB.h
