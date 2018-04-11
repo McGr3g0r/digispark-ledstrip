@@ -21,7 +21,13 @@ https://github.com/digistump/DigisparkExamplePrograms.git
 Example usage: :
 
 ;sets led 01  white color
+
 ./send 01ffffff00 --no-new-line
 
 ;sets led 2 blinking red
+
 ./send 0200ff0001 --no-new-line
+
+DigiSpark with ATTINY85 has very low resources. In case the program does not work well with USB
+change  RING_BUFFER_SIZE to 64 in DigiUSB.h
+
