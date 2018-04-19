@@ -24,9 +24,9 @@ if [ "$a1" == "brightness" ]; then
     output="fe${a2}000000"
 fi
 
-
+# send data with header 0xfd and terminator 0xdf
 if [ "$a1" == "led" -a "$a2" != "clear" ]; then
-    output="${a2}${a3}${attr}"
+    output="fd${a2}${a3}${attr}df"
 fi
 
 # LOGING

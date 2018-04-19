@@ -5,7 +5,7 @@
 // #define DELAY       5000
 #define PIN 0
 #define NUMPIXELS 10
-#define BUF_SIZE 11
+#define BUF_SIZE ((2 * 7) + 1)
 #define BRIGHTNESS  50
 #define BLINK_MILLIS 1000
 
@@ -88,33 +88,38 @@ void loop() {
 
   if (charsRead >= BUF_SIZE - 1)
   {
-    int idx = (hex_to_int(&buf[0]) << 4) | hex_to_int(&buf[1]);
+    int header = (hex_to_int(&buf[0]) << 4) | hex_to_int(&buf[1]);    
+    int idx = (hex_to_int(&buf[2]) << 4) | hex_to_int(&buf[3]);
 
-    char r = (hex_to_int(&buf[2]) << 4) | hex_to_int(&buf[3]);
-    char g = (hex_to_int(&buf[4]) << 4) | hex_to_int(&buf[5]);
-    char b = (hex_to_int(&buf[6]) << 4) | hex_to_int(&buf[7]);
-    char attr = (hex_to_int(&buf[8]) << 4) | hex_to_int(&buf[9]);
+    char r = (hex_to_int(&buf[4]) << 4) | hex_to_int(&buf[5]);
+    char g = (hex_to_int(&buf[6]) << 4) | hex_to_int(&buf[7]);
+    char b = (hex_to_int(&buf[8]) << 4) | hex_to_int(&buf[9]);
+    char attr = (hex_to_int(&buf[10]) << 4) | hex_to_int(&buf[11]);
 
-    if (idx < NUMPIXELS) {
-      LEDS_ATTRS[idx] = attr;
-        COLORS[idx].r = r;
-        COLORS[idx].g = g;
-        COLORS[idx].b = b;
-      strip.setPixelColor(idx, g, r, b);
-      strip.show();
-    } else if (idx == 0xff) {
-      for (idx = 0; idx < NUMPIXELS; idx++) {
-        COLORS[idx].r = r;
-        COLORS[idx].g = g;
-        COLORS[idx].b = b;
+    int terminator = (hex_to_int(&buf[12]) << 4) | hex_to_int(&buf[13]);
+
+    if (header == 0xfd && terminator == 0xdf) {
+      if (idx < NUMPIXELS) {
         LEDS_ATTRS[idx] = attr;
+          COLORS[idx].r = r;
+          COLORS[idx].g = g;
+          COLORS[idx].b = b;
         strip.setPixelColor(idx, g, r, b);
         strip.show();
+      } else if (idx == 0xff) {
+        for (idx = 0; idx < NUMPIXELS; idx++) {
+          COLORS[idx].r = r;
+          COLORS[idx].g = g;
+          COLORS[idx].b = b;
+          LEDS_ATTRS[idx] = attr;
+          strip.setPixelColor(idx, g, r, b);
+          strip.show();
+        }
+      } else if (idx == 0xfe) {
+          brightness = r;
+          strip.setBrightness(brightness);
+          strip.show();
       }
-    } else if (idx == 0xfe) {
-        brightness = r;
-        strip.setBrightness(brightness);
-        strip.show();
     }
     charsRead = 0;
   }
